@@ -1,0 +1,167 @@
+From 9432fcb030dd5c7127c4d8299124c8c0f1c8c3de Mon Sep 17 00:00:00 2001
+From: Tai Vu <taivu@stanford.edu>
+Date: Sat, 4 Jul 2020 14:03:04 -0700
+Subject: [PATCH] Create Patch File
+
+---
+ 0001-Create-Patch-File.patch | 112 +++++++++++++++++++++++++++++++++++
+ client_test.py               |  23 +++++++
+ 2 files changed, 135 insertions(+)
+ create mode 100644 0001-Create-Patch-File.patch
+
+diff --git a/0001-Create-Patch-File.patch b/0001-Create-Patch-File.patch
+new file mode 100644
+index 0000000..eb44c8c
+--- /dev/null
++++ b/0001-Create-Patch-File.patch
+@@ -0,0 +1,112 @@
++From 9b2bfd6e461f486aff2b5676eeb503c2314afc21 Mon Sep 17 00:00:00 2001
++From: Tai Vu <taivu@stanford.edu>
++Date: Sat, 4 Jul 2020 13:58:34 -0700
++Subject: [PATCH] Create Patch File
++
++---
++ __pycache__/client3.cpython-37.pyc | Bin 0 -> 1178 bytes
++ client3.py                         |  10 +++++++---
++ client_test.py                     |  13 +++++++++++--
++ 3 files changed, 18 insertions(+), 5 deletions(-)
++ create mode 100644 __pycache__/client3.cpython-37.pyc
++
++diff --git a/__pycache__/client3.cpython-37.pyc b/__pycache__/client3.cpython-37.pyc
++new file mode 100644
++index 0000000000000000000000000000000000000000..29734c5c383d2d3ecfa896d441428339288ca927
++GIT binary patch
++literal 1178
++zcmYjR&2Jk;6rb6hU9S^6lzfL?2BZosHFZ!gQB<JR2?!*jv{9)TQLQGPXM3CVt}`<(
++zjd4y!;=&){9QkKBa9nZY)H^3mycs7IGkRY$Z{NI+pY}<!xkPYv{vzqGbwd7j#_d9z
++zJVr8qB2z@soCxY=AObH#5qil4Q-O$7C}PD_^a~L+6{{M`1nMd|5A+{zeuE`ghImG2
++z^pL!qiUx%9CeT+a^Y<W{-vKsf*W{XB)A{>Oiq(vWwKw~)ir#x-9cr*XqdzjSAvVR9
++z*oJLbgN;W7c2pfUU=y}ryT>-kj8bwjec{fRAb~ZtyhD&TcE~KaxjlY?wVaYx^DWjz
++zjwc@utQ{S++j-fQ`JgoRV1I9auYEBFefdSEKKuD9`-c+JMe-{`&X77t<}tD<#@iuR
++z)H*HLAu7bz=vClt_RbEc!8F_=D!NOq*pxbJ%6beli6;mAM3-vZ1upZPmpyI=zzYBc
++ziocfm7!0>1??VAvT6E${S~)7S!tyFIw(Oo)HCv9-vrJXdNM~JG*wUQ84KT$Pt)gCD
++zO52L6=we)2(C)aZ;|J-&zmC2ORlDkbCwdvhzh(Qm0d3l^$C#d#S^Kc;j)zcK)Bg74
++zyHfXM!8-$KfS;B<`;*kbkBWYVx$CUx^Y1fl$1>;N6!@eWWFz-gXV*e^uxs(f-A{K%
++zmk-<BJj0L=AB--mMjz}UR(Im7!xW5%XqeDDxEoYA@vQ5zcgsmfei-YhOsS#>xP}T&
++zaU4^6mtcd#$w&NaupFD0m9D+M<WzE5s2lx^Yd7FyUv(=GwHudP<;-6!SOXoa1oM36
++z;<eB+F*3pu%BWuPw`n?*S&^obkDt1BD}K*#Y56DE@Pm8iKF8X<^v|Hynj}6N`c>hV
++zPdZh2c=T241F<sJd7hm;(13t6R>TXtVm2FsV6RMBh*)DC<xoUVpC3K@p`ypWNAD6T
++z<Pg%dVi}I0iqN+Y6-}!M@t};T-A1lq<Z=W>757R#l(u3Tq^e>M7b9YysnH3R=fR`h
++z4??@)c))nv750B^a`@4UUOgHjx^wt^1CI<xmQcS#7P26z;|^CT4;fv;87Fi*_z#=5
++BG2Z|H
++
++literal 0
++HcmV?d00001
++
++diff --git a/client3.py b/client3.py
++index f1771c3..bffe822 100644
++--- a/client3.py
+++++ b/client3.py
++@@ -35,14 +35,16 @@ def getDataPoint(quote):
++ 	stock = quote['stock']
++ 	bid_price = float(quote['top_bid']['price'])
++ 	ask_price = float(quote['top_ask']['price'])
++-	price = bid_price
+++	price = (bid_price + ask_price) / 2
++ 	return stock, bid_price, ask_price, price
++ 
++ def getRatio(price_a, price_b):
++ 	""" Get ratio of price_a and price_b """
++ 	""" ------------- Update this function ------------- """
++ 	""" Also create some unit tests for this function in client_test.py """
++-	return 1
+++	if price_b == 0:
+++		return
+++	return price_a / price_b
++ 
++ # Main
++ if __name__ == "__main__":
++@@ -52,8 +54,10 @@ if __name__ == "__main__":
++ 		quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
++ 
++ 		""" ----------- Update to get the ratio --------------- """
+++		prices = {}
++ 		for quote in quotes:
++ 			stock, bid_price, ask_price, price = getDataPoint(quote)
+++			prices[stock] = price
++ 			print ("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
++ 
++-		print ("Ratio %s" % getRatio(price, price))
+++		print ("Ratio %s" % getRatio(prices['ABC'], prices['DEF']))
++diff --git a/client_test.py b/client_test.py
++index af2bf26..2303f16 100644
++--- a/client_test.py
+++++ b/client_test.py
++@@ -1,5 +1,5 @@
++ import unittest
++-from client3 import getDataPoint
+++from client3 import getDataPoint, getRatio
++ 
++ class ClientTest(unittest.TestCase):
++   def test_getDataPoint_calculatePrice(self):
++@@ -8,6 +8,11 @@ class ClientTest(unittest.TestCase):
++       {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
++     ]
++     """ ------------ Add the assertion below ------------ """
+++    for quote in quotes:
+++      self.assertEqual(
+++        getDataPoint(quote),
+++        (quote['stock'], quote['top_bid']['price'], quote['top_ask']['price'], (quote['top_bid']['price'] + quote['top_ask']['price']) / 2)
+++      )
++ 
++   def test_getDataPoint_calculatePriceBidGreaterThanAsk(self):
++     quotes = [
++@@ -15,7 +20,11 @@ class ClientTest(unittest.TestCase):
++       {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
++     ]
++     """ ------------ Add the assertion below ------------ """
++-
+++    for quote in quotes:
+++      self.assertEqual(
+++        getDataPoint(quote),
+++        (quote['stock'], quote['top_bid']['price'], quote['top_ask']['price'], (quote['top_bid']['price'] + quote['top_ask']['price']) / 2)
+++      )
++ 
++   """ ------------ Add more unit tests ------------ """
++ 
++-- 
++2.21.1 (Apple Git-122.3)
++
+diff --git a/client_test.py b/client_test.py
+index 2303f16..ec595d5 100644
+--- a/client_test.py
++++ b/client_test.py
+@@ -27,7 +27,30 @@ class ClientTest(unittest.TestCase):
+       )
+ 
+   """ ------------ Add more unit tests ------------ """
++  def test_getRatio_priceBZero(self):
++    price_a = 120.6
++    price_b = 0
++    self.assertIsNone(getRatio(price_a, price_b))
++ 
++  def test_getRatio_priceAZero(self):
++    price_a = 0
++    price_b = 150.98
++    self.assertEqual(getRatio(price_a, price_b), 0)
++ 
++  def test_getRatio_greaterThan1(self):
++    price_a = 356.22
++    price_b = 175.98
++    self.assertGreater(getRatio(price_a, price_b), 1)
+ 
++  def test_getRatio_LessThan1(self):
++    price_a = 189.07
++    price_b = 254.33
++    self.assertLess(getRatio(price_a, price_b), 1)
++
++  def test_getRatio_exactlyOne(self):
++    price_a = 412.09
++    price_b = 412.09
++    self.assertEqual(getRatio(price_a, price_b), 1)
+ 
+ 
+ if __name__ == '__main__':
+-- 
+2.21.1 (Apple Git-122.3)
+
